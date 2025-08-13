@@ -104,6 +104,6 @@ python -m http.server 8000
 
 ## 📄 License
 
-This project is licensed under the MIT License — feel free to fork, modify, and use it.
+This project is not free to use its for my use only!
 
 ---
