@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeSync - Real-Time Code Editor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen active">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1><i class="fas fa-code"></i> CodeSync</h1>
+                    <p>Real-time collaborative code editor</p>
+                </div>
+                <div class="login-form">
+                    <input type="text" id="username" placeholder="Enter your username" maxlength="20">
+                    <input type="text" id="room-id" placeholder="Room ID (leave empty for new room)" maxlength="50">
+                    <button id="join-btn" class="primary-btn">
+                        <i class="fas fa-sign-in-alt"></i> Join Room
+                    </button>
+                </div>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-users"></i>
+                        <span>Real-time collaboration</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-robot"></i>
+                        <span>AI code completion</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-folder"></i>
+                        <span>File management</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Editor Screen -->
+        <div id="editor-screen" class="screen">
+            <div class="header">
+                <div class="header-left">
+                    <h1><i class="fas fa-code"></i> CodeSync</h1>
+                    <span id="room-info" class="room-info"></span>
+                </div>
+                <div class="header-center">
+                    <div id="active-users" class="active-users"></div>
+                </div>
+                <div class="header-right">
+                    <button id="ai-complete-btn" class="ai-btn" title="AI Complete Code">
+                        <i class="fas fa-magic"></i>
+                    </button>
+                    <button id="ai-explain-btn" class="ai-btn" title="Explain Code">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                    <button id="leave-room-btn" class="leave-btn" title="Leave Room">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- File Explorer -->
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h3><i class="fas fa-folder-open"></i> Explorer</h3>
+                        <div class="file-actions">
+                            <button id="new-file-btn" title="New File">
+                                <i class="fas fa-file-plus"></i>
+                            </button>
+                            <button id="new-folder-btn" title="New Folder">
+                                <i class="fas fa-folder-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="file-tree" class="file-tree"></div>
+                </div>
+
+                <!-- Editor Area -->
+                <div class="editor-container">
+                    <div class="editor-tabs">
+                        <div id="editor-tabs" class="tabs"></div>
+                    </div>
+                    <div id="editor" class="editor"></div>
+                    <div id="no-file-message" class="no-file-message">
+                        <i class="fas fa-file-code"></i>
+                        <h3>No file selected</h3>
+                        <p>Create a new file or select an existing one to start coding</p>
+                    </div>
+                </div>
+
+                <!-- AI Panel -->
+                <div id="ai-panel" class="ai-panel">
+                    <div class="ai-panel-header">
+                        <h3><i class="fas fa-robot"></i> AI Assistant</h3>
+                        <button id="close-ai-panel" class="close-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="ai-content" class="ai-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="new-file-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New File</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="new-file-name" placeholder="Enter file name (e.g., script.js)">
+                <div class="file-templates">
+                    <button class="template-btn" data-template="js">JavaScript</button>
+                    <button class="template-btn" data-template="html">HTML</button>
+                    <button class="template-btn" data-template="css">CSS</button>
+                    <button class="template-btn" data-template="py">Python</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="create-file-btn" class="primary-btn">Create</button>
+                <button class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="new-folder-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Folder</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="new-folder-name" placeholder="Enter folder name">
+            </div>
+            <div class="modal-footer">
+                <button id="create-folder-btn" class="primary-btn">Create</button>
+                <button class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    
+    <script src="js/firebase-config.js"></script>
+    <script src="js/groq-service.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/collaboration.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

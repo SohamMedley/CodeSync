@@ -1,0 +1,120 @@
+/* Monaco Editor Customizations */
+.monaco-editor {
+  background: #1e1e1e !important;
+}
+
+.monaco-editor .margin {
+  background: #1e1e1e !important;
+}
+
+.monaco-editor .monaco-editor-background {
+  background: #1e1e1e !important;
+}
+
+/* Cursor styles for collaboration */
+.remote-cursor {
+  position: absolute;
+  width: 2px;
+  height: 18px;
+  background: #ff6b6b;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.remote-cursor::after {
+  content: attr(data-username);
+  position: absolute;
+  top: -25px;
+  left: 0;
+  background: #ff6b6b;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  white-space: nowrap;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.remote-selection {
+  background: rgba(255, 107, 107, 0.2) !important;
+  position: absolute;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Loading states */
+.editor-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: #1e1e1e;
+  color: #cccccc;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #3e3e42;
+  border-top: 4px solid #007acc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* File icons */
+.file-icon {
+  color: #cccccc;
+}
+
+.file-icon.js {
+  color: #f7df1e;
+}
+.file-icon.html {
+  color: #e34c26;
+}
+.file-icon.css {
+  color: #1572b6;
+}
+.file-icon.py {
+  color: #3776ab;
+}
+.file-icon.json {
+  color: #00d4aa;
+}
+.file-icon.md {
+  color: #ffffff;
+}
+.file-icon.txt {
+  color: #cccccc;
+}
+
+/* Syntax highlighting enhancements */
+.monaco-editor .token.keyword {
+  color: #569cd6 !important;
+}
+
+.monaco-editor .token.string {
+  color: #ce9178 !important;
+}
+
+.monaco-editor .token.comment {
+  color: #6a9955 !important;
+}
+
+.monaco-editor .token.number {
+  color: #b5cea8 !important;
+}
+
+.monaco-editor .token.function {
+  color: #dcdcaa !important;
+}
